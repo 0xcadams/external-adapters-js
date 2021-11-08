@@ -77,10 +77,6 @@ jobs:
       #     export IMAGE_PREFIX=${{ secrets.SDLC_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/k6
       #     # create the config
       #     yarn qa:flux:configure k6payload ${ADAPTER_NAME} ${UNIQUE_NAME}
-      
-      # K6 section
-      # - name: Push k6 image to ecr
-      #   run: |
       #     # Move to the k6 package and build/push
       #     set -x
       #     cd ./packages/k6
@@ -98,7 +94,7 @@ jobs:
       #     export UNIQUE_NAME=unique-name
       #     helm upgrade k6-${UNIQUE_NAME} ./k8s \
       #       --install \
-      #       --namespace k6-soak \
+      #       --namespace adapters \
       #       --create-namespace \
       #       -f ./k8s/values.yaml \
       #       --set image.tag=${UNIQUE_NAME} \
