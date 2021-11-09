@@ -43,9 +43,9 @@ jobs:
         run: |
           set -x
           pull_number=$(jq --raw-output .pull_request.number "$GITHUB_EVENT_PATH")
-          echo '::set-output name=PR_NUMBER::1111' # TODO
+          pull_number=1096
+          echo '::set-output name=PR_NUMBER::${pull_number}' # TODO
           echo "pull request number is ${pull_number}"
-          pull_number=1111
           gh pr view ${pull_number} --json files --jq '.files.[].path' # TODO
           echo '::set-output name=ADAPTERS_LIST::coingecko'
       - name: Build and deploy adapters adapter
