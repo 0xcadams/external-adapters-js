@@ -47,49 +47,42 @@ jobs:
           echo "pull request number is ${pull_number}"
           # gh pr view ${pull_number} --json files --jq '.files.[].path' # TODO
           echo '::set-output name=ADAPTERS_LIST::coingecko'
-      # - name: Get adapters list to test from changes
-      #   id: get-adapters-list
-      #   run: |
-      #     echo '::set-output name=DOES_THIS_TRANSFER::yes it does'
-      #     echo "did it transfer ${{ steps.get-adapters-list.outputs.DOES_THIS_TRANSFER }}"
-      - name: Build the adapter
+      - name: Build and deploy adapters adapter
+        env:
+          UNIQUE_NAME: ${{ steps.get-pr-info.outputs.PR_NUMBER }}
+          ADAPTER_NAME: ${{ steps.get-pr-info.outputs.ADAPTERS_LIST }}
+          IMAGE_PREFIX: ${{ secrets.SDLC_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/adapters/
+          IMAGE_TAG: qa-${UNIQUE_NAME}
+          GITHUB_TOKEN: ${{ secrets.QA_GITHUB_TOKEN }}
         run: |
-          export UNIQUE_NAME=${{ steps.get-pr-info.outputs.PR_NUMBER }}
-          export ADAPTER_NAME=${{ steps.get-pr-info.outputs.ADAPTERS_LIST }}
-          export IMAGE_PREFIX=${{ secrets.SDLC_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/adapters/
-          export IMAGE_TAG=qa-${UNIQUE_NAME}
+          # export IMAGE_PREFIX=${{ secrets.SDLC_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/adapters/
+          # export IMAGE_TAG=qa-${UNIQUE_NAME}
 
           IMAGE_TAG=${IMAGE_TAG} IMAGE_PREFIX=${IMAGE_PREFIX} yarn generate:docker-compose
           docker-compose -f docker-compose.generated.yaml build ${ADAPTER_NAME}-adapter
           docker push ${IMAGE_PREFIX}${ADAPTER_NAME}-adapter:${IMAGE_TAG}
-          helm repo add chainlink https://raw.githubusercontent.com/smartcontractkit/charts/gh-pages/ --password ${{ secrets.QA_GITHUB_TOKEN }} --username dummy
+          helm repo add chainlink https://raw.githubusercontent.com/smartcontractkit/charts/gh-pages/ --password ${GITHUB_TOKEN} --username dummy
           yarn qa:adapter start ${ADAPTER_NAME} ${UNIQUE_NAME} ${IMAGE_TAG}
-      # - name: Push adapter image to ECR
-      #   run: |
-      #     echo "TODO"
-      # - name: Deploy the adapter
-      #   run: |
-      #     echo "TODO"
       # - name: Build the k6 payload
+      #   env:
+      #     UNIQUE_NAME: ${{ steps.get-pr-info.outputs.PR_NUMBER }}
+      #     # ADAPTER_NAME: ${{ steps.get-pr-info.outputs.ADAPTERS_LIST }}
+      #     IMAGE_PREFIX: ${{ secrets.SDLC_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/k6
       #   run: |
       #     export UNIQUE_NAME=unique-name
       #     export ADAPTER_NAME=coingecko
-      #     export IMAGE_PREFIX=${{ secrets.SDLC_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/k6
+      #     # export IMAGE_PREFIX=${{ secrets.SDLC_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/k6
       #     # create the config
       #     yarn qa:flux:configure k6payload ${ADAPTER_NAME} ${UNIQUE_NAME}
       #     # Move to the k6 package and build/push
-      #     set -x
       #     cd ./packages/k6
-      #     echo "yarn build"
       #     yarn build
-      #     export UNIQUE_NAME=unique-name
-      #     echo "docker build"
-      #     docker build -t ${{ secrets.SDLC_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/k6:${UNIQUE_NAME} .
-      #     echo "docker push"
-      #     docker push ${{ secrets.SDLC_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/k6:${UNIQUE_NAME}
+      #     docker build -t ${IMAGE_PREFIX}:${UNIQUE_NAME} .
+      #     docker push ${IMAGE_PREFIX}:${UNIQUE_NAME}
       # - name: Deploy k6
+      #   env: 
+      #     UNIQUE_NAME: ${{ steps.get-pr-info.outputs.PR_NUMBER }}
       #   run: |
-      #     set -x
       #     cd ./packages/k6
       #     export UNIQUE_NAME=unique-name
       #     helm upgrade k6-${UNIQUE_NAME} ./k8s \
