@@ -57,7 +57,7 @@ jobs:
         run: |
           # export IMAGE_PREFIX=${{ secrets.SDLC_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/adapters/
           # export IMAGE_TAG=qa-${UNIQUE_NAME}
-
+          set -x
           IMAGE_TAG=${IMAGE_TAG} IMAGE_PREFIX=${IMAGE_PREFIX} yarn generate:docker-compose
           docker-compose -f docker-compose.generated.yaml build ${ADAPTER_NAME}-adapter
           docker push ${IMAGE_PREFIX}${ADAPTER_NAME}-adapter:${IMAGE_TAG}
