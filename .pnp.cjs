@@ -12096,7 +12096,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/babel__core", "npm:7.1.16"],
             ["@types/webpack", null],
             ["find-cache-dir", "npm:3.3.1"],
-            ["loader-utils", "npm:1.4.0"],
+            ["loader-utils", "npm:1.4.2"],
             ["make-dir", "npm:3.1.0"],
             ["schema-utils", "npm:2.7.1"],
             ["webpack", "virtual:4f33a23cf772c9fbbeaff833230e51fa7f4a4c09ef609dd1b1396e9132fe2abc348652b57470c151673da706634f58c80da2f57c8a7b7ca0c06dcd07aea7c2c8#npm:5.51.1"]
@@ -23218,10 +23218,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["loader-utils", [
-        ["npm:1.4.0", {
-          "packageLocation": "./.yarn/cache/loader-utils-npm-1.4.0-a56254a277-d150b15e7a.zip/node_modules/loader-utils/",
+        ["npm:1.4.2", {
+          "packageLocation": "./.yarn/cache/loader-utils-npm-1.4.2-b4537b2f88-eb6fb622ef.zip/node_modules/loader-utils/",
           "packageDependencies": [
-            ["loader-utils", "npm:1.4.0"],
+            ["loader-utils", "npm:1.4.2"],
             ["big.js", "npm:5.2.2"],
             ["emojis-list", "npm:3.0.0"],
             ["json5", "npm:1.0.1"]
@@ -32583,7 +32583,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["json-loader", "npm:0.5.7"],
             ["json5", "npm:0.5.1"],
             ["loader-runner", "npm:2.4.0"],
-            ["loader-utils", "npm:1.4.0"],
+            ["loader-utils", "npm:1.4.2"],
             ["memory-fs", "npm:0.4.1"],
             ["mkdirp", "npm:0.5.5"],
             ["node-libs-browser", "npm:2.2.1"],
